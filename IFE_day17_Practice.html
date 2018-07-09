@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">    
+    <title>IFE ECMAScript</title>
+</head>
+<body>
+    <h3>二进制转换</h3>        
+    <input id="dec-number" type="number" placeholder="输入一个十进制非负整数" value="">
+    <input id="bin-bit" type="number" placeholder="输入转化后二进制数字位数">
+    <button id="trans-btn">转化为二进制</button>
+    <p id="result">运算结果</p>
+
+    <hr>
+
+    <h3>3的小游戏</h3>
+    <p>练习使用循环和条件语句，实现如下需求：<br>
+    从1到100，以此在console输出各数字，但是，当数字为3的倍数或者含有3的时候，输出“PA”
+        比如：1,2,PA,4,5,PA,……,11,PA,PA,14,PA……</p>
+    <textarea id="game3" type="text" style="width: 400px; height: 100px;" wrap="physical"></textarea>
+
+    <hr>
+
+    <h3>九九乘法表</h3>
+    <div style="display: flex; justify-content: space-between">
+        <span id="chengfabiao"></span>
+        <table id="table1" border="1"></table>
+    </div>
+    <div id="hello" style="background: #225599; width: 200px; height: 150px; 
+    border-radius: 50%; position: fixed; top: 0; right: 0; text-align: center;
+     line-height: 150px; color: #fff; font-size: 20px;"></div>
+
+    <hr>
+
+    <script>
+        // 二进制转换
+        var oInp = document.getElementById('dec-number');
+        var oInp2 = document.getElementById('bin-bit');
+        var oBtn = document.getElementById('trans-btn');
+        var oRlt = document.getElementById('result');
+        var list = []; 
+        function dec2bin(decNumber) { 
+            if(decNumber >= 0 && Math.floor(decNumber)==decNumber ){
+                var yushu = decNumber % 2;
+                list.push(yushu);
+                decNumber = Math.floor(decNumber / 2);
+                if(decNumber==0){
+                    while(list.length < oInp2.value){
+                        list.push(0);
+                    }
+                    list.reverse();
+                    oRlt.innerHTML = list.join('');
+                    list = [];
+                }
+                else {
+                    dec2bin(decNumber);
+                }
+            }
+            else {
+                alert("请输入非负整数");
+            }
+        }
+        oBtn.onclick = function(){
+            return dec2bin(oInp.value);
+        };
+        
+        //3的小游戏
+        var oGame3 = document.getElementById("game3");
+        var list2 = [];
+        for(var i = 1; i<=100; i++){
+            if(i % 3 == 0 ||(10 <= i / 3 && i / 3 <= 13) || (i + 7) % 10 == 0){
+                list2.push('PA');    
+            }
+            else {
+                list2.push(i);
+            }
+        }
+        oGame3.innerHTML = list2;
+
+        // 九九乘法表
+        var oTxt = document.getElementById('chengfabiao');
+        for(let j = 1; j < 10; j++){
+            for(let k=1; k<=j; k++){
+               let row = k + "X" + j + "=" + k*j + "&nbsp" + "&nbsp" + "&nbsp" + "&nbsp";
+               if(k==j){
+                   row += "<br>";
+               }
+               oTxt.innerHTML += row;
+            }
+        }
+
+        // 九九乘法表 表格输出
+        var oTle = document.getElementById('table1');
+        for(let j = 1; j < 10; j++){
+            let row = "";
+            for(let k=1; k<=j; k++){
+                if(k==1){
+                    row += "<tr>";
+                }
+                row += "<td>" + k + "X" + j + "=" + k*j + "</td>" ;
+                if(k==j){
+                   row += "</tr>";
+                }  
+            }
+            oTle.innerHTML += row;   
+        }
+
+        // say hello
+        var oHlo = document.getElementById('hello');
+        var now = new Date();
+        var hours = now.getHours();
+        if(hours<12){
+            oHlo.innerHTML="Good morning";
+        }
+        else if(12<=hours && hours<=17){
+            oHlo.innerHTML="Good afternoon";
+        }
+        else {
+            oHlo.innerHTML="Good evening";
+        }
+    </script>
+</body>
+</html>
