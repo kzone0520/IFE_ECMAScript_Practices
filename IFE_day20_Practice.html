@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">    
+    <title>IFE ECMAScript</title>
+    <style>
+        select {
+                display: none;
+            }
+
+        .palette {
+            margin-top: 20px;
+            padding: 0;
+            list-style: none;
+            width: 200px;
+            height: 100px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .palette li {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #000;
+            cursor: pointer;
+        }
+        #donghua {
+            width: 480px;
+            height: 480px;
+            background-image: url('./images/erik_ce204002.jpg');
+            background-repeat: no-repeat;
+            background-position: 0;
+        }
+        #img {
+            position: fixed;
+            right: 30%;
+            top: 15%;
+        }
+    </style>
+
+</head>
+<body>
+    <!--  编码 一  -->
+    <input id="inp1" type="text" value="" onkeydown="keyD(event)"/>
+    <button id="btn1" type="submit" >提交</button>
+    <hr>
+    <!--  编码 二  -->
+    <label>
+        <input id="school" name="status" type="radio">
+        School
+    </label>
+    <label>
+        <input id="company" name="status" type="radio">
+        Company
+    </label>
+
+    <select id="school-select">        
+        <option>北京邮电大学</option>
+        <option>黑龙江大学</option>
+        <option>华中科技大学</option>
+    </select>
+
+    <select id="company-select">        
+        <option>百度</option>
+        <option>爱奇艺</option>        
+    </select>
+    
+    <!--  编码 三  -->
+    <ul class="palette" >
+        <li style="background-color:crimson"></li>
+        <li style="background-color:bisque"></li>
+        <li style="background-color:blueviolet"></li>
+        <li style="background-color:coral"></li>
+        <li style="background-color:chartreuse"></li>
+        <li style="background-color:darkolivegreen"></li>
+        <li style="background-color:cyan"></li>
+        <li style="background-color:#194738"></li>        
+    </ul>
+    <p class="color-picker"></p>
+    <!--  编码 四  -->
+
+    <div id="fade-obj" style="width:200px;height:200px;background:#000"></div>
+    <button id="fade-btn">淡出</button>
+
+    <!--  编码 五  -->
+    <div id='img'>
+        <div id="donghua"></div>
+        <button id="begin" style="background: chartreuse;">动起来</button>
+        <button id="stop" style="background: crimson;">STOP</button>
+    </div>
+
+    <script>
+        //编码一
+        var oInp = document.getElementById("inp1");
+        var oBtn = document.getElementById('btn1');
+        
+        function keyD(e){
+            var keynum;
+            keynum = window.event ? e.keyCode: e.which;
+            if(keynum==13){
+                alert(oInp.value);
+            }
+            else if(keynum==27){
+                oInp.value = "";
+            }
+        }
+        oBtn.onclick = function (){
+            alert(oInp.value);
+        }
+        
+        //编码二
+        var oSch = document.getElementById('school');
+        var oCom = document.getElementById('company');
+        var oSchSel = document.getElementById("school-select");
+        var oComSel = document.getElementById('company-select');
+        oSch.onclick = function(){
+            oSchSel.style.display = "block";
+            oComSel.style.display = "none";
+        }
+        oCom.onclick = function(){
+            oSchSel.style.cssText = "display: none";
+            oComSel.style.cssText = "display: block";
+        }
+
+        //编码三
+        var aLi = document.querySelector(".palette").querySelectorAll('li');
+        var p = document.querySelector('.color-picker');
+        for(var item of aLi){
+            item.onclick = function (e){
+                var c = e.target.style.backgroundColor;
+                p.innerHTML = c;
+                p.style.color = c;
+            }
+        }
+
+        //编码四 淡出淡入
+        var oDiv = document.getElementById('fade-obj');
+        var oBtn2 = document.getElementById('fade-btn');
+
+        var opc = 1;
+        function changeOpc(){
+            opc -= 0.05;
+            oDiv.style.opacity = opc;
+            if(opc >0){
+                setTimeout(changeOpc, 100);
+                oBtn.disabled = "disabled";
+            }
+            else{
+                oBtn2.innerHTML = "淡入";
+                oBtn2.disabled = "";
+            }   
+        }
+        function changeOpc2(){
+            opc += 0.05;
+            oDiv.style.opacity = opc;
+            if(opc < 1){
+                setTimeout(changeOpc2, 100);
+                oBtn2.disabled = "disabled";
+            }
+            else{
+                oBtn2.innerHTML = "淡出";
+                oBtn2.disabled = "";
+            }     
+        }
+        oBtn2.onclick = function(){
+            if(opc>=1){
+                setTimeout(changeOpc, 100);  
+            }
+            else if(opc<=0){
+                setTimeout(changeOpc2, 100);
+            }
+        }
+        
+        //编码五 一帧动画
+        var oDonghua = document.getElementById('donghua');
+        var oBtnBegin = document.getElementById('begin');
+        var oBtnStop = document.querySelector('#stop');
+        var topValue = 0;
+        var timer1;
+
+        function changeTop () {
+            topValue -= 480;
+            oDonghua.style.backgroundPosition = '0' + '' + topValue+'px';
+            if(topValue > -8160){
+                timer1 = setTimeout(changeTop, 100);
+            }
+            else if(topValue = -8160) {
+                topValue = 0;
+                timer1 = setTimeout(changeTop, 100)
+            }
+        }
+        oBtnBegin.onclick = function(){
+            // 先清除定时器 否则每次重复点击将加快速度
+            clearTimeout(timer1);
+            timer1 = setTimeout(changeTop, 100);
+        }
+        oBtnStop.onclick = function(){
+            clearTimeout(timer1);
+        }
+
+    </script>    
+</body>
+</html>
