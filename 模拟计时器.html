@@ -1,0 +1,79 @@
+<!DOCTYPE heml>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>模拟计时器</title>
+        <!--用settimeout来累加数字达到模拟计时器的运行，因为函数执行需要时间，计时结果并不准确，-->
+        
+    </head>
+    <body style="text-align: center;">
+        <div style="font-size: 40px; font-weight: bold;">
+            <span id="minute">00</span>:<span id="second">00</span>:<span id="du">00</span>
+        </div>
+        <button id="btn1">开始计时</button>
+        <button id="btn2">停止计时</button>
+        <button id="btn3">重置</button>
+        <button id="btn4">记录</button>
+        <p></p>
+        
+        <script>
+            // 当计数器为个位时，前面补0函数
+            function addZeao(n){
+                var strNum = String(n);
+                if(strNum.length<2){
+                    return '0'+strNum;
+                }
+                return n;
+            }   
+
+            var m = document.getElementById('minute');
+            var s = document.getElementById('second');
+            var d = document.getElementById('du');
+            var btn1 = document.getElementById('btn1');
+            var btn2 = document.getElementById('btn2');
+            var btn3 = document.getElementById('btn3');
+            var btn4 = document.getElementById('btn4');
+            var p = document.querySelector('p');
+            var div1 = document.querySelector('div');
+            var dNum = 0;
+            var sNum = 0;
+            var mNum = 0;
+            var timer1;   
+
+            function count(){
+                d.innerHTML = addZeao(dNum);
+                s.innerHTML = addZeao(sNum);
+                m.innerHTML = addZeao(mNum);
+                dNum++;
+                if(dNum>99){
+                    dNum = 0;
+                    sNum ++;
+                    if(sNum > 59){
+                        sNum = 0;
+                        mNum++;
+                    }
+                }
+                timer1 = setTimeout(count, 10);
+            }
+
+            btn1.onclick = function(){
+                clearTimeout(timer1);
+                timer1 = setTimeout(count, 10);
+            }
+            btn2.onclick = function(){
+                clearTimeout(timer1);
+            }
+            btn3.onclick = function(){
+                clearTimeout(timer1);
+                d.innerHTML = s.innerHTML = m.innerHTML = "00";
+                dNum=sNum=mNum=0;
+                p.innerHTML = "";
+            }
+            btn4.onclick = function(){
+                p.innerHTML += div1.innerHTML + "<br>";
+            }
+            
+        </script>
+        
+    </body>
+</html>
