@@ -139,11 +139,11 @@
 
         var opc = 1;
         function changeOpc(){
-            opc -= 0.05;
             oDiv.style.opacity = opc;
+            opc -= 0.1;       
             if(opc >0){
                 setTimeout(changeOpc, 100);
-                oBtn.disabled = "disabled";
+                oBtn2.disabled = "disabled";
             }
             else{
                 oBtn2.innerHTML = "淡入";
@@ -151,8 +151,8 @@
             }   
         }
         function changeOpc2(){
-            opc += 0.05;
             oDiv.style.opacity = opc;
+            opc += 0.1;
             if(opc < 1){
                 setTimeout(changeOpc2, 100);
                 oBtn2.disabled = "disabled";
@@ -179,15 +179,12 @@
         var timer1;
 
         function changeTop () {
-            topValue -= 480;
             oDonghua.style.backgroundPosition = '0' + '' + topValue+'px';
-            if(topValue > -8160){
-                timer1 = setTimeout(changeTop, 100);
-            }
-            else if(topValue = -8160) {
+            topValue -= 480;
+            if(topValue <= -8160) {
                 topValue = 0;
-                timer1 = setTimeout(changeTop, 100)
             }
+            timer1 = setTimeout(changeTop, 100)
         }
         oBtnBegin.onclick = function(){
             // 先清除定时器 否则每次重复点击将加快速度
