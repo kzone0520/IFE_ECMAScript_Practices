@@ -1,2 +1,1 @@
-# IFE_ECMAScript_Practices
-demo
+http://ife.baidu.com/college/detail/id/5
