@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" >
+        <title>IFE-DAY25</title>
+        <script>
+            window.onload = function(){
+                
+                var oTime = document.getElementById('time');
+                // 根据年月日来判断星期几的函数
+                function myGetDay(year,month,day){
+                    var arr = ['日', '一', '二', '三', '四', '五', '六'];
+                    var dayNum = new Date(year, month-1, day).getDay();
+                    // 当传入的参数只有一个，且为getDay（）时也能输出正确结果
+                    return arguments.length == 1 ? '星期' + arr[arguments[0]] : '星期' + arr[dayNum];
+                }
+                console.log(1992,1,23);
+                console.log(myGetDay(1992,1,23));
+                console.log(2008,8,8);
+                console.log(myGetDay(2008,8,8));
+                
+                // 补0函数
+                function addZero(num){
+                    return num < 10 ? '0'+num: num;
+                }
+                
+                var now = new Date();                
+                // 格式一
+                function showTime(){
+                    return now.getFullYear() + '年' + addZero(Number(now.getMonth()+1)) + '月' + 
+                        addZero(now.getDate()) + '日' + '   '+ myGetDay(now.getDay()) + '   '+addZero(now.getHours())
+                        + ':' + addZero(now.getMinutes()) + ':' + addZero(now.getSeconds());
+                }
+                // 格式二
+                function showTime2(){
+                    var arr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                    return now.getFullYear() + '-' + addZero(Number(now.getMonth()+1)) + '-' + 
+                        addZero(now.getDate()) + '   '+ arr[now.getDay()] + '   '+addZero(now.getHours())
+                        + ':' + addZero(now.getMinutes()) + ':' + addZero(now.getSeconds()) + ' ' + (now.getHours()>=12? 'PM':'AM');
+                }
+                oTime.innerHTML = showTime() + "<br>" + showTime2();
+
+
+                //所选时间和当前时间的差值
+                var year_select =document.getElementById("year-select");
+                var month_select =document.getElementById("month-select");
+                var day_select =document.getElementById("day-select");
+                var hour_select =document.getElementById("hour-select");
+                var minute_select =document.getElementById("minute-select");
+                var second_select =document.getElementById("second-select");
+                
+                // 补全option内容函数
+                function optionHtml(obj, num1, num2){
+                    // 先重置，避免重复调用此函数造成内容叠加
+                    obj.innerHTML = " ";
+                    while(num1 <= num2){
+                        obj.innerHTML += "<option value=" + num1 + ">" + num1 + "</option>";
+                        num1++;
+                    }
+                }
+                optionHtml(year_select, 2000, 2032);
+                optionHtml(month_select, 1, 12);
+                monthDays(year_select.value, month_select.value);
+                optionHtml(hour_select, 0, 23);
+                optionHtml(minute_select, 0, 59);
+                optionHtml(second_select, 0, 59);
+
+                // 根据年月来判断一个月有几天。
+                function monthDays(x, y){
+                    // 非闰年的2月
+                    if(x % 4 !== 0 && y == 2){
+                        return optionHtml(day_select, 1, 28);
+                    }
+                    if(x % 4 == 0 && y == 2){
+                        return optionHtml(day_select, 1, 29);
+                    }
+                    if( [4, 6, 9, 11].indexOf(Number(y)) >= 0){
+                        return optionHtml(day_select, 1, 30);
+                    }
+                    if( [1, 3, 5, 7, 8, 10, 12].indexOf(Number(y)) >= 0){
+                        return optionHtml(day_select, 1, 31);
+                    }
+                }
+                
+ 
+                var aSelect = document.querySelectorAll('select');
+                var aSpan = document.querySelectorAll('span');
+                // 当select标签的内容变换时  某些内容跟随变换的触发函数
+                function changeValue(){
+                    // 给p标签中选择的时间赋值
+                    aSpan[0].innerHTML = year_select.value;
+                    aSpan[1].innerHTML = month_select.value;
+                    aSpan[2].innerHTML = day_select.value;
+                    aSpan[3].innerHTML = myGetDay(year_select.value, month_select.value, day_select.value);
+                    aSpan[4].innerHTML = addZero(hour_select.value) + ':' +  addZero(minute_select.value) + ':' +  addZero(second_select.value);
+                    
+                    // 用两个时间戳相减得到“还有”或者“已经过去”的时间。
+                    var selectTime = new Date(year_select.value, month_select.value-1, day_select.value, hour_select.value,
+                        minute_select.value, second_select.value, 000).getTime();
+                    var substruction = now.getTime() - selectTime;                   
+                    if(substruction < 0){
+                        substruction = Math.abs(substruction);
+                        aSpan[5].innerHTML = "还有" + Math.floor(substruction/86400000) + "天";
+                    }
+                    else{aSpan[5].innerHTML ="已经过去" + Math.floor(substruction/86400000) + "天";}
+                    // 本地时区为东八区，在时间戳上没区别，但是在getHourse（）上会自动加8小时，所以需要减去。
+                    // JS时间戳的单位为毫米，而在这里对比的单位为秒，所以实际当前时间会比显示出来的时间大0~1秒，相对的当选择的时间大于当前时间，显示“还有...秒”时，会少1秒。
+                    aSpan[6].innerHTML = new Date(substruction).getHours() - 8 + '小时' + new Date(substruction).getMinutes() + '分' + new Date(substruction).getSeconds() + '秒';
+                }
+                changeValue();
+
+                // 当select的值变换时，触发变换函数。
+                for( var item of aSelect){
+                    item.onchange = function(){
+                        changeValue();
+                    }
+                }
+                //单独设置这两个变换事件。                
+                year_select.onchange = month_select.onchange = function(){
+                    monthDays(year_select.value, month_select.value);
+                    changeValue();
+                }
+                
+            }
+        </script>
+    </head>
+    <body style="font-size: 20px; font-weight: bold;">
+        <h2>现在时间：</h2>
+        <div id="time"></div>
+        <hr>
+
+        <select id="year-select">
+            <!--
+                <option value="2000">2000</option>
+                <option value="2001">2001</option>
+                <option value="2002">2002</option>
+                ……
+                <option value="2032">2002</option>
+            -->
+        </select>
+        <select id="month-select"></select>
+        <select id="day-select"></select>
+        <select id="hour-select"></select>
+        <select id="minute-select"></select>
+        <select id="second-select"></select>
+  
+        <p id="result-wrapper">现在距离 <span></span>年<span></span>月<span></span>日 <span></span> <span></span>
+             <span></span>  <span></span></p>
+      
+    </body>
+</html>
