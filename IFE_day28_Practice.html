@@ -13,6 +13,7 @@
             #email-input {
                 width: 198px;
                 height: 25px;
+                outline: none;
             }
             #email-sug-wrapper { 
                 width: 200px;
@@ -23,6 +24,9 @@
             #email-sug-wrapper li:hover {
                 background: yellow;
                 cursor: pointer;
+            }
+            #email-sug-wrapper li.active {
+                background: pink;
             }
             
         </style>
@@ -36,53 +40,38 @@
                 
                 // 进入页面输入框获取焦点
                 oInp.focus();
-                /*
-                oInp.oninput = function(){
-                     
-                    oUl.innerHTML = "";
-                    if(oInp.value.trim()){
-                        for(var item of postfixList){
-                            oUl.innerHTML += "<li class>" + oInp.value.trim() + '@' + item + "</li>" ;
-                        }
-                        oUl.style.display = "block";
-                    }
-                    else{
-                        oUl.style.display = "none";
-                    }
+        
+                // html转码
+                function htmlEncode (html){
+                    var temp = document.createElement('div');
+                    (temp.textContent != undefined) ? (temp.textContent = html) : (temp.innerText = html);
+                    var output = temp.innerHTML;
+                    temp = null;
+                    return output;
                 }
-                oInp.onblur = function(){
-                    oUl.style.display = "none";
-                }
-                oInp.onfocus = function(){
-                    if(oInp.value.trim()){
-                        oUl.style.display = "block";
-                    };
-                }
-                */           
-
-                // 获取用户输入
-                function getValue(){
-                    /*
-                    var text = oInp.value.trim();
+                // html解码
+                function htmlDecode(text){
                     var temp = document.createElement('div');
                     temp.innerHTML = text;
-                    var output = temp.innerText || temp.textContent;
-                    temp =  null;
+                    var output = temp.textContent || temp.innerText;
+                    temp = null;
                     return output;
-                        */
-                    console.log("获取用户输入");
+                }
+
+                // 获取用户输入并去除首尾空格
+                function getValue(){
                     return oInp.value.trim();
-                    
                 }
 
                 //生成提示框中的提示内容
                 function makeLi(){
                     var liValue = "";
-                    var inpValue = getValue();
+                    // 将输入框内容转码后赋值给inpValue
+                    var inpValue = htmlEncode(getValue());
                     var inpValueLast = "";
                     if(inpValue.indexOf('@') >0){
                         inpValueLast = inpValue.slice(inpValue.indexOf('@')+1, inpValue.length);
-                        inpValue = inpValue.slice(0, inpValue.indexOf('@'));
+                        inpValue = inpValue.slice(0, inpValue.indexOf('@')).trim();
                     }
                     for(let item of postfixList){
                         /* 如果inpValueLast = ""，值为0，则显示全部。如果inpValueLast不等于空，且不是某个
@@ -92,11 +81,10 @@
                         }
                     }
                     oUl.innerHTML = liValue;
-                    console.log("生成提示框中的提示内容");
                 }
                 /*
                 //生成提示框中的提示内容 方法二
-                //这是改变postfixList的方法来拼接提示内容
+                //这是改变postfixList数组的方法来拼接提示内容
                 function makeLi(){
                     var postfixList = ['163.com', 'gmail.com', '126.com', 'qq.com', '263.net'];
                     var inpValue = getValue();
@@ -132,55 +120,57 @@
                     oUl.style.display = 'block';
                 }
                 // 隐藏ul提示框
-                function hiddenUl(){
+                function hideUl(){
                     oUl.style.display = 'none';
                 }
                 // 控制ul的显示/隐藏状态
-                function showOrHidden(){
-                    return getValue() ? showUl(): hiddenUl();
+                function showOrhide(){
+                    return getValue() ? showUl(): hideUl();
                 }
                 
                 // 监听提示框鼠标点击 及 输入框上下回车键
                 function valueIntoInp(){
-                    if(oInp.value){
+                    if(oUl.childElementCount){
                         var aLi = oUl.querySelectorAll('li');
-                        let n = 0;
-                        aLi[n].style.background = 'pink';
+                        var n = 0;
+                        aLi[n].className = 'active';
                         // 添加监听上下回车键，做出相应动作
                         oInp.onkeydown =function(){
                             var keynum = '';
                             keynum = window.event? event.keyCode: event.which;
-                            console.log(keynum);
-                            if(keynum == 40){
-                                aLi[n].style.background = 'none';
-                                // 当颜色向下移动到最后一个时，返回到第一个
-                                if(n == aLi.length-1){n = 0;}
-                                else{n++};
-                                aLi[n].style.background = 'pink';
-                            }
-                            if(keynum == 38){
-                                aLi[n].style.background = 'none';
-                                // 当颜色向上移动到第一个时，返回到最后一个
-                                if(n == 0){n = aLi.length-1;}
-                                else{n--};
-                                aLi[n].style.background = 'pink';
-                            }
-                            /* 按回车键 将内容放到输入框，隐藏提示框，即使隐藏了提示框，按上下键
-                            和回车还是有动作，只是看不到了（未解决）。所以设置按回车后将焦点移到右侧按钮上。*/
-                            if(keynum == 13){
-                                oInp.value = aLi[n].innerHTML;
-                                hiddenUl();
-                                oBtn.focus();
-                            }
-                            if(keynum == 27){
-                                oInp.select();
+                            if(oUl.childElementCount > 0){
+                                if(keynum == 40){
+                                    aLi[n].className = '';
+                                    // 当颜色向下移动到最后一个时，返回到第一个
+                                    if(n == aLi.length-1){n = 0;}
+                                    else{n++};
+                                    aLi[n].className = 'active';
+                                }
+                                if(keynum == 38){
+                                    aLi[n].className = '';
+                                    // 当颜色向上移动到第一个时，返回到最后一个
+                                    if(n == 0){n = aLi.length-1;}
+                                    else{n--};
+                                    aLi[n].className = 'active';
+                                }
+                                /* 按回车键 将内容放到输入框，隐藏提示框，即使隐藏了提示框，按上下键
+                                和回车还是有动作，只是看不到了（未解决）。所以设置按回车后将焦点移到右侧按钮上。*/
+                                // 以上问题已经解决，在判断keynum之前先判断oUl有没有子元素，回车后将oUl子元素删光。
+                                if(keynum == 13){
+                                    oInp.value = htmlDecode(aLi[n].innerHTML);
+                                    oUl.innerHTML = '';
+                                    hideUl();
+                                }
+                                if(keynum == 27){
+                                    oInp.select();
+                                }
                             }
                         }
                         // 点击提示，将内容放到输入框
                         for(let item of aLi){
                             item.onclick = function (){
-                                oInp.value = item.innerHTML;
-                                // 隐藏放到输入框失去焦点时执行（点击li也会试输入框失去焦点）
+                                oInp.value = htmlDecode(item.innerHTML);
+                                // 隐藏放到window的点击事件里
                             }
                         }
                     }
@@ -189,15 +179,13 @@
                 // 监听输入框的输入
                 oInp.oninput = function(){
                     makeLi();
-                    showOrHidden();
+                    showOrhide();
                     valueIntoInp();
-                    console.log('监听输入框的输入');
                 }
 
-                // 点击输入框外的任意地方，提示隐藏。
-                // 当失去焦点时执行的函数，设置定时器是因为如果没有定时器，则会因为隐藏而无法点击li
-                oInp.onblur = function(){
-                    setTimeout(hiddenUl, 200);
+                // 点击输入框外的任意空白地方，提示隐藏。
+                window.onclick = function(){
+                    hideUl();
                 }
 
             }
