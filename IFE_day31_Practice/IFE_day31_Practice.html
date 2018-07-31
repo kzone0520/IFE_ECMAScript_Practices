@@ -5,7 +5,7 @@
         <title>IFE_day31</title>
     </head>
     <body>
-        <div id='selectDiv'>
+        <div id='selectDiv' style="text-align: center">
             <div id="product-select"  >商品：
                 <input type="checkbox" value="手机">手机
                 <input type="checkbox" value="笔记本">笔记本
@@ -19,7 +19,27 @@
                 <input type="checkbox" value="全选">全选
             </div>
         </div>
-        <table  border="1" >
+        <canvas id="myDraw" width="600" height="360" ></canvas>
+        <div id='mySvg' style="display: inline-block; font-size: 12px; font-weight: normal;" >
+            <svg width='600' height='360' xmlns="http://www.w3.org/2000/svg" version="1.1"
+                style="stroke:black; stroke-width: 1;">
+                <!-- 绘制Y轴-->
+                <line x1='40' y1='310' x2='40' y2='10' />
+                <!-- 绘制X轴-->
+                <line x1='40' y1='310' x2='540' y2='310' />
+                <!-- 绘制Y轴箭头-->
+                <line x1='35' y1='15' x2='40' y2='10' />
+                <line x1='45' y1='15' x2='40' y2='10' />
+                <!-- 绘制X轴箭头-->
+                <line x1='535' y1='305' x2='540' y2='310' />
+                <line x1='535' y1='315' x2='540' y2='310' />
+                <!-- 绘制柱状图-->
+                <svg id="dataBar" style="fill: blue;">
+                </svg>
+            </svg>
+
+        </div>
+        <table  border="1" style="margin: 0 auto">
             <tbody>
                 
             </tbody>
@@ -29,7 +49,9 @@
         <script src="./js/getData.js"></script>
         <script src="./js/table.js"></script>
         <script src="./js/checkbox.js"></script>
+        <script src="./js/line.js"></script>
+        <script src="./js/bar.js"></script>
         <script src="./js/app.js"></script>
-        
+
     </body>
 </html>

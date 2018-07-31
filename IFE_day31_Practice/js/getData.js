@@ -10,8 +10,10 @@ var getData = function ( productValue, regionValue){
             // 循环条件二  （维度二）
             for(let j = 0; j < regionValue.length; j++){
                 // 判断条件一二，获取数据（以数组形式传递）
-                if(item.product === productValue[i] && item.region === regionValue[j]){
+                if(item.product === productValue[i] && item.region === regionValue[j] 
+                    || item.product === regionValue[j] && item.region === productValue[i]){  // 如果此函数的参数传反了也能输出结果
                     let x_list = [];
+                    // 判断商品在前还是地区在前
                     if(productValue.length > 1 && regionValue.length == 1){
                         x_list.push(item.region);
                         x_list.push(item.product);
@@ -28,12 +30,6 @@ var getData = function ( productValue, regionValue){
             }
         }
             
-    }
-    // 当数据的第一个与上一行或者往上第二行有重复的时候，删除这个数据。为合并第一列相同的数据腾地方。
-    for(let i = 0; i < td_list.length; i++){
-        if((i > 0 && td_list[i][0] == td_list[i-1][0]) ||(i > 1 && td_list[i][0] == td_list[i-2][0])){
-            td_list[i].shift();
-        }
     }
     return td_list;
 }

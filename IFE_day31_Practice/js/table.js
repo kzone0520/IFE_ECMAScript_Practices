@@ -18,7 +18,13 @@ var tbodyHTML = function (productValue, regionValue){
     for(let j = 0; j < list.length; j++){
         dataHTML += '<tr class = "trData">';
         for(let t_data of list[j]){
-            dataHTML += '<td>' + t_data + '</td>';
+            // 当数据的第一个与上一行或者往上第二行有重复的时候，隐藏跳过这个数据。为合并第一列相同的数据腾地方。
+            if(j > 0 && t_data == list[j-1][0] || j > 1 && t_data == list[j-2][0]){
+                dataHTML += '<td style="display: none">' + t_data + '</td>';
+            }
+            else{
+                dataHTML += '<td>' + t_data + '</td>';
+            }
         }
         dataHTML += '</tr>';
     }
