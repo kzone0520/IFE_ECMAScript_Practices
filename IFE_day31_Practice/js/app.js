@@ -2,7 +2,7 @@ var regionSelect = document.getElementById('region-select');
 var regionCbox = regionSelect.querySelectorAll('input');
 var productSelect = document.getElementById('product-select');
 var productCbox = productSelect.querySelectorAll('input');
-var tbody = document.querySelector('tbody');
+var table = document.querySelector('table');
 var selectDiv = document.getElementById('selectDiv');
 var myDraw = document.getElementById('myDraw');
 
@@ -39,8 +39,8 @@ selectDiv.addEventListener('click', function(){
         }
     }
     // 显示表格
-    tbody.innerHTML = "";
-    tbody.innerHTML += tbodyHTML(productValueList, regionValueList);
+    table.innerHTML = "";
+    table.innerHTML += tbodyHTML(productValueList, regionValueList);
     // 合并表格
     var trData = document.querySelectorAll('.trData');
     for(let item of trData){
@@ -52,6 +52,10 @@ selectDiv.addEventListener('click', function(){
             item.firstChild.setAttribute('rowspan', regionValueList.length);
         }
     }
+    // 获取数据数组，显示多折线图
+    var dataArr = getData(productValueList, regionValueList);
+    makeMoreLine(dataArr, myDraw);
+
     // 动态绑定鼠标移入表格事件
     for(let item of trData){
         item.onmouseover = function(){
@@ -65,8 +69,7 @@ selectDiv.addEventListener('click', function(){
         }
         // 鼠标移出
         item.onmouseout = function(){
-           // makeLine(getData(['华东'], ['手机'])[0], myDraw);
-           // makeBar(getData(['华东'], ['手机'])[0]);
+            makeMoreLine(dataArr, myDraw);
         }
     }
 });
@@ -76,7 +79,7 @@ regionCbox[0].checked = "checked";
 regionCbox[0].disabled= true;
 productCbox[0].checked = "checked";
 productCbox[0].disabled = true;
-tbody.innerHTML = tbodyHTML([sourceData[0].product], [sourceData[0].region]);
+table.innerHTML = tbodyHTML([sourceData[0].product], [sourceData[0].region]);
 // 默认折线图、柱状图
-makeLine(getData(['华东'], ['手机'])[0], myDraw);
+makeMoreLine(getData(['华东'], ['手机']), myDraw);
 makeBar(getData(['华东'], ['手机'])[0]);
