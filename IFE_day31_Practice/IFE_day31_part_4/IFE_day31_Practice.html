@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>IFE_day31</title>
+        <style>
+            body, input {
+                margin: 0;
+                padding: 0;
+            }
+            td, th {
+                border: 1px solid #353535;
+                text-align: center;
+                width: 70px;
+                height: 45px;
+                box-sizing: border-box;
+                position: relative;
+            }
+            tr .dataInp {
+                text-align: center;
+                background: none;
+                border: none;
+                width: 40px;
+                font-size: 14px;
+                
+            }
+            .save, .cancle {
+                display: none;
+                cursor: pointer;
+                width: 30px;
+                height: 20px;
+                font-size: 6px;
+                float: left;
+            }
+            .cancle {
+                float: right;
+            }
+            .img {
+               cursor: pointer; 
+               margin: 0 auto;
+               display: none;
+               position: absolute;
+               top: 4px;
+               right: 4px;
+            }
+            table tr td:hover img{
+                display: block;
+            }
+        </style>
+    </head>
+    <body>
+        <div id='selectDiv' style="text-align: center">
+            <div id="product-select"  >商品：
+                <input type="checkbox" value="手机">手机
+                <input type="checkbox" value="笔记本">笔记本
+                <input type="checkbox" value="智能音箱">智能音箱
+                <input type="checkbox" value="全选">全选
+            </div>
+            <div id="region-select">地区：
+                <input type="checkbox" value="华东">华东
+                <input type="checkbox" value="华南">华南
+                <input type="checkbox" value="华北">华北
+                <input type="checkbox" value="全选">全选
+            </div>
+        </div>
+        <canvas id="myDraw" width="600" height="360" ></canvas>
+        <div id='mySvg' style="display: inline-block; font-size: 12px; font-weight: normal;" >
+            <svg width='600' height='360' xmlns="http://www.w3.org/2000/svg" version="1.1"
+                style="stroke:black; stroke-width: 1;">
+                <!-- 绘制Y轴-->
+                <line x1='40' y1='310' x2='40' y2='10' />
+                <!-- 绘制X轴-->
+                <line x1='40' y1='310' x2='540' y2='310' />
+                <!-- 绘制Y轴箭头-->
+                <line x1='35' y1='15' x2='40' y2='10' />
+                <line x1='45' y1='15' x2='40' y2='10' />
+                <!-- 绘制X轴箭头-->
+                <line x1='535' y1='305' x2='540' y2='310' />
+                <line x1='535' y1='315' x2='540' y2='310' />
+                <!-- 绘制柱状图-->
+                <svg id="dataBar" style="fill: blue;">
+                </svg>
+            </svg>
+        </div>
+        <table id="myTable" style="margin: 0 auto; border-collapse: collapse;"></table>
+        
+        <script src="./js/ife31data.js"></script>
+        <script src="./js/EventUtil.js"></script>
+        <script src="./js/handler.js"></script>
+        <script src="./js/getData.js"></script>
+        <script src="./js/table.js"></script>
+        <script src="./js/checkbox.js"></script>
+        <script src="./js/line.js"></script>
+        <script src="./js/line2.js"></script>
+        <script src="./js/bar.js"></script>
+        <script src="./js/app.js"></script>
+        <script>//localStorage.clear()</script>
+    </body>
+</html>
