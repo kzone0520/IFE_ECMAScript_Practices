@@ -9,8 +9,8 @@ var trData = document.querySelectorAll('.trData');
 var step = 0;
 
 // 勾选的初始值
-var productValueList = ['华东'];
-var regionValueList = ['手机'];
+var productValueList = ['手机'];
+var regionValueList = ['华东'];
 
 // 选择框点击函数
 var select_click_handler = function(event){
@@ -216,13 +216,8 @@ var table_mouseover_handler = function(event){
     }
 }
 
-// 当点击浏览器前进或者后退时触发函数
-var stateHandler = function(event){
-    var event = EventUtil.getEvent(event);
-    var target = EventUtil.getTarget(event);
-    let selectValue = event.state;
-    console.log("output_State:");
-    console.log(selectValue);
+// 根据history或者event中的state值来勾选
+var makeSelect = function(selectValue){
     if (selectValue){
         for (let item of productCbox){
             item.checked = "";
@@ -235,11 +230,21 @@ var stateHandler = function(event){
             if (selectValue.region.indexOf(item.value) !== -1){
                 item.checked = 'checked';
             }
-        }    
+        }
+        selectOne(productCbox);
+        selectOne(regionCbox);
     }
+}
+
+// 当点击浏览器前进或者后退时触发函数
+var stateHandler = function(event){
+    var event = EventUtil.getEvent(event);
+    var target = EventUtil.getTarget(event);
+    var selectValue = event.state;
+    console.log("output_State:");
+    console.log(selectValue);
+    makeSelect(selectValue);
     inp_change_handler();
-    selectOne(productCbox);
-    selectOne(regionCbox);
 };
 
 /*

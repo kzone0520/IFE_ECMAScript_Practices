@@ -1,17 +1,25 @@
 
-// 现在通过浏览器history.pushState方式记录操作 的加载事件
+// 通过浏览器history.pushState方式记录操作 的加载事件
 EventUtil.addHandler(window, 'load', function(){
-    productCbox[0].checked = "checked";
-    productCbox[0].disabled = true;
-    regionCbox[0].checked = "checked";
-    regionCbox[0].disabled= true;
+    if (window.history.state){
+        var selectValue = window.history.state;
+        makeSelect(selectValue);
+    }
+    if (selectOne(productCbox) == 0 || selectOne(regionCbox) == 0){
+        console.log(666);
+        productCbox[0].checked = "checked";
+        productCbox[0].disabled = true;
+        regionCbox[0].checked = "checked";
+        regionCbox[0].disabled= true;
+
+        // 首次载入时替换当前的历史记录
+        window.history.replaceState({
+            product: productValueList,
+            region: regionValueList
+        }, null, "#step"+step);
+    }
     inp_change_handler();
     makeBar(getData(['华东'], ['手机'])[0]);
-    // 首次载入时替换当前的历史记录
-    window.history.replaceState({
-        product: productValueList,
-        region: regionValueList
-    }, null, "#step"+step);
 })
 
 EventUtil.addHandler(selectDiv, "click", select_click_handler);
@@ -28,7 +36,7 @@ EventUtil.addHandler(table, 'keydown', keydown_handler);
 EventUtil.addHandler(table, 'DOMNodeInserted', table_change_handler);
 EventUtil.addHandler(table, 'mouseover', table_mouseover_handler);
 
-/* 现在通过hash方式记录操作 的加载事件
+/* 通过hash方式记录操作 的加载事件
 EventUtil.addHandler(window, 'load', function(){
     wrapHandler();
     if (selectOne(productCbox) == 0 || selectOne(regionCbox) == 0){
