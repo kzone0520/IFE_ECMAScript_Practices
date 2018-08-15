@@ -5,9 +5,7 @@ function Restaurant(x){
     this.staff = x.staff;
 }
 Restaurant.prototype.hire = function(worker){
-    for (let i = 0; i < arguments.length; i++){
-        this.staff.push(arguments[i].name);
-    }
+    this.staff.push(worker.name);
 }
 Restaurant.prototype.fire = function(worker){
     this.staff.splice(this.staff.indexOf(worker), 1);
