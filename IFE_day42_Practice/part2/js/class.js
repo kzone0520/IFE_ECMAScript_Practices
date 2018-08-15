@@ -108,13 +108,6 @@ Cooker.getInstance = (function(){
     }
 })();
 
-/*
-var l = Cooker.getInstance('wyq', '6000');
-var n = Cooker.getInstance('zkz', '8000');
-n.work({name:"佛跳墙"});
-console.log(l,n);
-*/
-
 // 顾客类
 function Customer(name){
     this.name = name;
@@ -138,7 +131,6 @@ Customer.prototype = {
         console.log("顾客用餐=>:"+food.name);
         console.log("顾客"+this.name+"用餐完毕已滚出餐厅");
         console.log("---------------------我是分割线---------------------");
-
     }
 }
 
