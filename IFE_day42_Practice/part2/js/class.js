@@ -166,21 +166,26 @@ var menu = [{
 var customers = ["Joy", "Panny", "Marry"];
 
 // 餐厅运行
-btn.onclick = function(){
-    var myRest = restaurantSingleton.getInstance({cash: 1000000,
-        seats: 1,
-        staff: []});
-    var w = Waiter.getInstance('wyq', '6000');
-    var k = Cooker.getInstance('zkz', '8000');
-    myRest.hire(w);
-    myRest.hire(k);
-    console.log(myRest);
-    for (let customer of customers){
-        var Xman = new Customer(customer);
-        var food =  w.getOrder(Xman);
-        k.work(food);
-        w.shangcai(food);
-        Xman.eat(food);
+btn.onclick = (function(){
+    var myRest = null;
+    return function(){
+        if(myRest === null){
+            myRest = restaurantSingleton.getInstance({cash: 1000000,
+                seats: 1,
+                staff: []});
+            var w = Waiter.getInstance('wyq', '6000');
+            var k = Cooker.getInstance('zkz', '8000');
+            myRest.hire(w);
+            myRest.hire(k);
+            console.log(myRest);
+            for (let customer of customers){
+                var Xman = new Customer(customer);
+                var food =  w.getOrder(Xman);
+                k.work(food);
+                w.shangcai(food);
+                Xman.eat(food);
+            }
+        }
     }
-};
+})();
 
